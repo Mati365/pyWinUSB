@@ -1,0 +1,7 @@
+*~
+.idea
+pywinusb/__pycache__
+build
+dist
+*.egg-info
+README.rst
