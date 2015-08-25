@@ -64,9 +64,9 @@ class ProgressWindow(Gtk.Window, EventHandler):
                         , re.search("pyWinUSB\/\w{40}\/source\/(.*)", file).group(1)
                         , current / total
                         )
-    def on_done(self, err=False):
-        if err:
-            GObject.idle_add(self.show_warning, "Error!", "Check logs!", Gtk.MessageType.WARNING)
+    def on_done(self, err=None):
+        if err is not None:
+            GObject.idle_add(self.show_warning, "Error!", err, Gtk.MessageType.WARNING)
         else:
             GObject.idle_add(self.show_warning, "Copying done!", "You can eject device!")
         self.destroy()

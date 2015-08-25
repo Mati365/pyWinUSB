@@ -14,3 +14,9 @@ def event_method(status):
             return self
         return func_wrapper
     return dec
+
+# Metoda instalacyjna
+def installer_method(status):
+    def dec(func):
+        return chain_method(event_method(status)(func))
+    return dec

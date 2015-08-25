@@ -10,7 +10,7 @@ def check_root_access():
 
 def main():
     if not check_root_access():
-        sys.exit("\nOnly root can run this script\n")
+        sys.exit("\nOnly root can run this script :(\n")
 
     win = AppWindow()
     win.show_all()

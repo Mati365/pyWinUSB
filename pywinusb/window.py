@@ -1,6 +1,6 @@
 import threading, time
-
 from gi.repository import Gtk, GObject, Gdk
+
 from pywinusb.creator import USBCreator
 from pywinusb.progress import ProgressWindow
 
@@ -12,8 +12,8 @@ class AppWindow(USBCreator, Gtk.Window):
 
         self.set_border_width(10)
         self.set_size_request(150, -1)
-        self.__create_wizard()
         self.connect("delete-event", Gtk.main_quit)
+        self.__create_wizard()
 
     def __create_wizard(self):
         """ Tworzenie kontrolek w oknie aplikacji
@@ -42,14 +42,26 @@ class AppWindow(USBCreator, Gtk.Window):
         # Dostępne urządzenia
         row = Gtk.ListBoxRow()
         box = Gtk.VBox(spacing=8)
-        box.pack_start(Gtk.Label("Flash device:", xalign=0), True, False, 0)
+        box.pack_start(Gtk.Label("Select device:", xalign=0), True, False, 0)
 
         # Listowanie urządzeń co pół sekundy
-        self.devices = Gtk.TreeView(Gtk.ListStore(str))
+        self.devices = Gtk.TreeView(Gtk.ListStore(str, str))
         self.devices.set_size_request(-1, 128)
-        self.devices.append_column(Gtk.TreeViewColumn('', Gtk.CellRendererText(), text=0))
+        self.devices.append_column(Gtk.TreeViewColumn("", Gtk.CellRendererText(), text=0))
+        self.devices.append_column(Gtk.TreeViewColumn("", Gtk.CellRendererText(), text=1))
         self.devices.set_headers_visible(False)
         box.pack_start(self.devices, True, False, 0)
+
+        row.add(box)
+        listbox.add(row)
+
+        # Checkbox formatowania
+        row = Gtk.ListBoxRow()
+        box = Gtk.VBox(spacing=8)
+
+        self.erase_checkbox = Gtk.CheckButton(label="Format device to NTFS(recommend)?")
+        self.erase_checkbox.set_active(True)
+        box.pack_start(self.erase_checkbox, True, True, 0)
 
         row.add(box)
         listbox.add(row)
@@ -92,6 +104,7 @@ class AppWindow(USBCreator, Gtk.Window):
         self.create_boot_disc(
               device=model[iter][0]
             , image_path=path
+            , format_device=self.erase_checkbox.get_active()
         )
 
     def __show_file_chooser(self, button):
@@ -137,8 +150,8 @@ class AppWindow(USBCreator, Gtk.Window):
                     devices.clear()
 
                     # Dodawanie urządzeń do listy
-                    for mount_point in new_devices:
-                        devices.append([ mount_point ])
+                    for (mount_point, size) in new_devices:
+                        devices.append([mount_point, str(size/1048576)+"MB"])
                 time.sleep(1)
 
         # Włączanie wątku odpowiedzialnego za odświeżanie urządzeń
