@@ -59,7 +59,7 @@ class AppWindow(USBCreator, Gtk.Window):
         row = Gtk.ListBoxRow()
         box = Gtk.VBox(spacing=8)
 
-        self.erase_checkbox = Gtk.CheckButton(label="Format device to NTFS(recommend)?")
+        self.erase_checkbox = Gtk.CheckButton(label="Format device to NTFS (recommend)?")
         self.erase_checkbox.set_active(True)
         box.pack_start(self.erase_checkbox, True, True, 0)
 
