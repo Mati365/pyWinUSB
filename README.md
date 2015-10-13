@@ -4,11 +4,11 @@
 [![PyPI Downloads](https://img.shields.io/pypi/dm/py-winusb.svg)](https://pypi.python.org/pypi/py-winusb)
 
 _A simple tool written in Python, made to help with creating a bootable USB Windows drives._
-**Program support Windows Vista images and newer**
+**Program supports Windows Vista images and newer**
 
 ## Installation:
 ```
-sudo pip install py-winusb
+sudo pip3 install py-winusb
 ```
 or using source code:
 ```
