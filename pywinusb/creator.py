@@ -154,22 +154,29 @@ class USBCreator:
     def make_bootable(self):
         """ Tworzenie dysku bootowalnego
         """
-        self.uuid = re.search("UUID=\"(\w*)\"", str(sh.blkid(self.device + "1"))).group(1)
-        print("Device UUID:", self.uuid)
+        # self.uuid = re.search("UUID=\"(\w*)\"", str(sh.blkid(self.device + "1"))).group(1)
+        # print("Device UUID:", self.uuid)
 
         # W niektórych wersjach windows katalog ten jest z drukowanej
+        def try_move(old_file, new_file):
+            try: sh.mv(old_file, new_file)
+            except:
+                print("File {} already exists, nothing to move".format(new_file))
+
         self.boot_folder = self.destination_mount + "/boot"
-        try: sh.mv(self.destination_mount + "/BOOT", self.boot_folder)
-        except:
-            pass
+        try_move(self.destination_mount + "/BOOT", self.boot_folder)
+        try_move(self.destination_mount + "/BOOTMGR", self.destination_mount + "/bootmgr")
 
         # Instalownie bootloadera
         # grub-install --target=i386-pc --boot-directory="/<USB_mount_folder>/boot" /dev/sdX
-        installer = sh.Command("grub-install")
-        installer(self.device, target="i386-pc", boot_directory=self.destination_mount + "/boot")
+        installer = sh.Command(sh.which("grub-install")
+                               or sh.which("grub2-install"))
+        installer(self.device, target="i386-pc", skip_fs_probe=True, force=True, boot_directory=self.destination_mount + "/boot")
 
         # Tworzenie konfiguracji GRUBa
-        with open("{}/grub/grub.cfg".format(self.boot_folder), "wt") as config:
+        with open( "{}/{}/grub.cfg".format( self.boot_folder, "grub2" if str(installer).find("grub2") != -1 else "grub")
+                 , "wt"
+                 ) as config:
             config.write("""
                 set menu_color_normal=white/black
                 set menu_color_highlight=black/light-gray

@@ -2,10 +2,10 @@
 from setuptools import setup
 from pip.req import parse_requirements
 
-install_reqs = parse_requirements("requirements.txt")
+install_reqs = parse_requirements("requirements.txt", session=False)
 setup(
       name="py-winusb"
-    , version="0.1.0.1"
+    , version="0.2.0.1"
     , packages=["pywinusb"]
     , install_requires= [str(ir.req) for ir in install_reqs]
     , url="https://github.com/Mati365/pyWinUSB"
@@ -13,7 +13,7 @@ setup(
     , author="Mateusz Bagiński"
     , author_email="cziken58@gmail.com"
     , description="Tool that helps with creating bootable Windows USB drives"
-    , long_description=open('README.rst').read()
+    , long_description=open("README.rst").read()
     , zip_safe=False
     , entry_points={
         "console_scripts": ["pywinusb=pywinusb.__main__:main"]
