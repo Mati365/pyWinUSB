@@ -1,13 +1,10 @@
 #!/usr/bin/env python3
 from setuptools import setup
-from pip.req import parse_requirements
 
-install_reqs = parse_requirements("requirements.txt", session=False)
 setup(
       name="py-winusb"
     , version="0.2.0.1"
     , packages=["pywinusb"]
-    , install_requires= [str(ir.req) for ir in install_reqs]
     , url="https://github.com/Mati365/pyWinUSB"
     , license="MIT"
     , author="Mateusz Bagiński"
